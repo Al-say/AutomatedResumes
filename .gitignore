@@ -60,6 +60,9 @@ chromedriver
 db/
 *.db
 
+# JDK installation (should not be version controlled)
+jdk/
+
 # Frontend build output
 dist/
 
