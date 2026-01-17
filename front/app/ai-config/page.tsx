@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { BiSave, BiBrain, BiInfoCircle } from 'react-icons/bi'
+import { BiSave, BiBrain, BiInfoCircle, BiTestTube } from 'react-icons/bi'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
@@ -14,9 +14,8 @@ export default function AiConfigPage() {
     prompt: '',
   })
 
-  const [loading, setLoading] = useState(false)
-  // 是否启用AI（映射 boss_config.enable_ai）
-  const [enableAi, setEnableAi] = useState<number>(0)
+  const [testResult, setTestResult] = useState<string>('')
+  const [testing, setTesting] = useState(false)
 
   // 加载AI配置
   useEffect(() => {
@@ -74,28 +73,29 @@ export default function AiConfigPage() {
     }
   }
 
-  // 切换 AI 开关并保存到 boss_config
-  const toggleEnableAi = async () => {
+  // 测试智谱AI连接
+  const testZhipuConnection = async () => {
+    setTesting(true)
+    setTestResult('')
     try {
-      const next = enableAi ? 0 : 1
-      setEnableAi(next)
-      const response = await fetch('http://localhost:8888/api/boss/config', {
-        method: 'PUT',
+      const response = await fetch('http://localhost:8888/api/ai/test-deepseek', {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ enableAi: next }),
       })
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
-      // 可选：校验返回体
-      // const updated = await response.json()
-    } catch (e) {
-      console.error('更新enable_ai失败:', e)
-      // 回滚
-      setEnableAi((prev) => (prev ? 0 : 1))
-      alert('切换失败，请检查后端服务连接')
+
+      const result = await response.text()
+      setTestResult(result)
+    } catch (error) {
+      console.error('测试智谱AI连接失败:', error)
+      setTestResult('连接测试失败: ' + (error instanceof Error ? error.message : '未知错误'))
+    } finally {
+      setTesting(false)
     }
   }
 
@@ -199,6 +199,32 @@ export default function AiConfigPage() {
                 <p className="text-xs text-muted-foreground">
                   AI使用的提示词模板，支持使用 %s 作为占位符，用于动态插入内容
                 </p>
+              </div>
+
+              {/* 智谱AI连接测试 */}
+              <div className="space-y-3 pt-4 border-t">
+                <div className="flex items-center justify-between">
+                  <Label>智谱AI连接测试</Label>
+                  <Button
+                    onClick={testZhipuConnection}
+                    size="sm"
+                    variant="outline"
+                    disabled={testing}
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-0"
+                  >
+                    <BiTestTube className="mr-1" />
+                    {testing ? '测试中...' : '测试连接'}
+                  </Button>
+                </div>
+                {testResult && (
+                  <div className={`p-3 rounded-md text-sm ${
+                    testResult.includes('成功') 
+                      ? 'bg-green-50 text-green-700 border border-green-200' 
+                      : 'bg-red-50 text-red-700 border border-red-200'
+                  }`}>
+                    <pre className="whitespace-pre-wrap font-mono text-xs">{testResult}</pre>
+                  </div>
+                )}
               </div>
             </div>
           </CardContent>
