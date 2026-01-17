@@ -1431,6 +1431,127 @@ public class PlaywrightManager {
         log.debug("Boss登录监控已恢复");
     }
 
+    // ==================== 爬取控制方法 ====================
+
+    /**
+     * 启动爬取任务
+     *
+     * @param keyword 搜索关键词
+     * @param city 城市
+     * @param platforms 平台列表（逗号分隔），null表示所有平台
+     */
+    public void startCrawling(String keyword, String city, String platforms) {
+        log.info("开始启动爬取任务 - 关键词: {}, 城市: {}, 平台: {}", keyword, city, platforms);
+
+        // 确保Playwright已初始化
+        if (!isInitialized()) {
+            init();
+        }
+
+        // 解析平台列表
+        List<String> platformList = new ArrayList<>();
+        if (platforms != null && !platforms.trim().isEmpty()) {
+            String[] platformArray = platforms.split(",");
+            for (String p : platformArray) {
+                platformList.add(p.trim().toLowerCase());
+            }
+        } else {
+            // 默认所有平台
+            platformList.addAll(List.of("boss", "liepin", "51job", "zhilian"));
+        }
+
+        // 并发启动各平台的爬取任务
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+
+        for (String platform : platformList) {
+            switch (platform) {
+                case "boss" -> {
+                    if (isLoggedIn("boss")) {
+                        futures.add(CompletableFuture.runAsync(() -> startBossCrawling(keyword, city)));
+                    } else {
+                        log.warn("Boss平台未登录，跳过爬取");
+                    }
+                }
+                case "liepin" -> {
+                    if (isLoggedIn("liepin")) {
+                        futures.add(CompletableFuture.runAsync(() -> startLiepinCrawling(keyword, city)));
+                    } else {
+                        log.warn("猎聘平台未登录，跳过爬取");
+                    }
+                }
+                case "51job" -> {
+                    if (isLoggedIn("51job")) {
+                        futures.add(CompletableFuture.runAsync(() -> start51jobCrawling(keyword, city)));
+                    } else {
+                        log.warn("51job平台未登录，跳过爬取");
+                    }
+                }
+                case "zhilian" -> {
+                    if (isLoggedIn("zhilian")) {
+                        futures.add(CompletableFuture.runAsync(() -> startZhilianCrawling(keyword, city)));
+                    } else {
+                        log.warn("智联平台未登录，跳过爬取");
+                    }
+                }
+                default -> log.warn("未知平台: {}", platform);
+            }
+        }
+
+        // 等待所有任务启动
+        try {
+            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+            log.info("所有爬取任务启动完成");
+        } catch (Exception e) {
+            log.error("启动爬取任务时发生异常", e);
+        }
+    }
+
+    /**
+     * 停止所有爬取任务
+     */
+    public void stopCrawling() {
+        log.info("开始停止所有爬取任务");
+        // 这里可以添加停止逻辑，目前主要依赖各平台的任务自行管理
+        // TODO: 实现更完善的停止机制
+        log.info("爬取任务停止完成");
+    }
+
+    /**
+     * 获取爬取状态
+     */
+    public Map<String, Object> getCrawlingStatus() {
+        Map<String, Object> status = new ConcurrentHashMap<>();
+        status.put("boss_logged_in", isLoggedIn("boss"));
+        status.put("liepin_logged_in", isLoggedIn("liepin"));
+        status.put("51job_logged_in", isLoggedIn("51job"));
+        status.put("zhilian_logged_in", isLoggedIn("zhilian"));
+        status.put("playwright_initialized", isInitialized());
+        return status;
+    }
+
+    // ==================== 各平台爬取实现 ====================
+
+    private void startBossCrawling(String keyword, String city) {
+        log.info("启动Boss直聘爬取 - 关键词: {}, 城市: {}", keyword, city);
+        // TODO: 实现Boss平台的具体爬取逻辑
+        // 这里可以调用BossService或直接实现爬取逻辑
+    }
+
+    private void startLiepinCrawling(String keyword, String city) {
+        log.info("启动猎聘爬取 - 关键词: {}, 城市: {}", keyword, city);
+        // TODO: 实现猎聘平台的具体爬取逻辑
+    }
+
+    private void start51jobCrawling(String keyword, String city) {
+        log.info("启动51job爬取 - 关键词: {}, 城市: {}", keyword, city);
+        // TODO: 实现51job平台的具体爬取逻辑
+    }
+
+    private void startZhilianCrawling(String keyword, String city) {
+        log.info("启动智联招聘爬取 - 关键词: {}, 城市: {}", keyword, city);
+        // TODO: 实现智联平台的具体爬取逻辑
+    }
+
     /**
      * 关闭Playwright实例
      * 在Spring容器销毁前自动执行

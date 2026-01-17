@@ -49,3 +49,10 @@ mybatis-plus:
     db-config:
       id-type: auto
   mapper-locations: classpath*:/mapper/**/*.xml
+
+# 爬取控制配置
+crawling:
+  auto-start: false  # 是否自动启动爬取（true=启动时自动开始，false=仅通过API手动控制）
+  default-keyword: "Java开发工程师"  # 默认搜索关键词
+  default-city: "北京"  # 默认搜索城市
+  default-platforms: "boss,liepin,51job,zhilian"  # 默认平台列表

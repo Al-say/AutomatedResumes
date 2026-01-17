@@ -16,6 +16,8 @@ export default function AiConfigPage() {
 
   const [testResult, setTestResult] = useState<string>('')
   const [testing, setTesting] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [enableAi, setEnableAi] = useState(0)
 
   // 加载AI配置
   useEffect(() => {
@@ -70,6 +72,36 @@ export default function AiConfigPage() {
       setEnableAi(val === '1' || val === 'true' || val === 'on' ? 1 : Number(raw) === 1 ? 1 : 0)
     } catch (e) {
       console.error('加载enable_ai失败:', e)
+    }
+  }
+
+  // 切换AI启用状态
+  const toggleEnableAi = async () => {
+    const newValue = enableAi === 1 ? 0 : 1
+    try {
+      const response = await fetch('http://localhost:8888/api/boss/config', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          enableAi: newValue
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const result = await response.json()
+      if (result.success) {
+        setEnableAi(newValue)
+      } else {
+        alert('切换AI状态失败: ' + result.message)
+      }
+    } catch (error) {
+      console.error('切换AI状态失败:', error)
+      alert('切换AI状态失败，请检查服务器连接！')
     }
   }
 

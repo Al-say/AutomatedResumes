@@ -21,6 +21,12 @@
 </p>
 </div>
 
+## 📚 文档导航
+
+- 🚀 **[快速开始](QUICKSTART.md)** - 5分钟上手指南
+- 📖 **[详细文档](USAGE.md)** - 完整使用说明
+- � **[故障排除](TROUBLESHOOTING.md)** - 常见问题解决方案- 📁 **[项目结构](PROJECT.md)** - 代码组织说明- �🛠️ **[环境配置](https://github.com/loks666/get_jobs/wiki/环境配置)** - 开发环境搭建
+
 - 📌 **目前该项目存在的问题**
     - 当前智联招聘平台有问题，其他平台可正常使用，如有兄台解决了智联招聘投递问题沟通后可提交pr。
     - 如果 Boss 出现掉线等问题，请注意两点：
@@ -44,6 +50,7 @@
 ## 🌟 特色功能
 
 - **🖥️ 图形化界面**：直观的网页管理界面，方便配置与运行，降低上手成本。
+- **🎛️ 手动爬取控制**：支持通过网页界面或API手动控制职位信息爬取，选择特定关键词、城市和平台进行精准搜索。
 - **💥 AI 智能匹配**：AI检测岗位匹配度，并根据JD自动撰写个性化的打招呼语（仅限 Boss 直聘）。
 - **📷️ 图片简历**：Boos直聘可在发送打招呼语后自动发送图片简历，无须等待HR索要简历，有效提高回复率。
 - **🔎 智能过滤**：自动过滤 **不活跃 HR**、**猎头岗位**、**目标薪资**，让你的简历投递更精准。
@@ -146,6 +153,71 @@ export DEEPSEEK_MODEL="deepseek-chat"  # 或 deepseek-reasoner
 
     - AI生成的打招呼语示例  
       <img src="src/main/resources/images/AiSayHi.png" alt="AI生成的打招呼语示例">
+
+## 🎛️ 爬取控制API
+
+项目支持通过HTTP API手动控制职位信息爬取，不再是启动时自动执行。
+
+### 启动爬取
+```bash
+POST http://localhost:8888/api/crawl/start
+Content-Type: application/json
+
+{
+  "keyword": "Java开发工程师",
+  "city": "北京",
+  "platforms": "boss,liepin,51job,zhilian"
+}
+```
+
+**参数说明：**
+- `keyword`: 搜索关键词（必填）
+- `city`: 城市名称（必填）
+- `platforms`: 平台列表，用逗号分隔（可选，默认所有平台）
+  - 支持：`boss`, `liepin`, `51job`, `zhilian`
+
+### 停止爬取
+```bash
+POST http://localhost:8888/api/crawl/stop
+```
+
+### 获取爬取状态
+```bash
+GET http://localhost:8888/api/crawl/status
+```
+
+**响应示例：**
+```json
+{
+  "success": true,
+  "data": {
+    "boss_logged_in": true,
+    "liepin_logged_in": true,
+    "51job_logged_in": true,
+    "zhilian_logged_in": false,
+    "playwright_initialized": true
+  }
+}
+```
+
+### 配置文件控制
+在 `application.yaml` 中配置：
+```yaml
+crawling:
+  auto-start: false  # 是否自动启动（默认false）
+  default-keyword: "Java开发工程师"
+  default-city: "北京"
+  default-platforms: "boss,liepin,51job,zhilian"
+```
+
+### 命令行参数
+```bash
+# 强制自动启动
+java -jar app.jar --auto-crawl
+
+# 强制手动模式
+java -jar app.jar --manual-only
+```
 
 - boss直聘([Boss.java](src/main/java/boss/Boss.java))【喜大普奔，目前Boss打招呼上限已修改为每日150次】
 

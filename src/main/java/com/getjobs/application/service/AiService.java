@@ -196,7 +196,14 @@ public class AiService {
      */
     private String buildChatCompletionsEndpoint(String baseUrl) {
         String normalized = normalizeBaseUrl(baseUrl);
-        // 如果 baseUrl 已经包含 /v1（常见配置为 https://api.openai.com/v1），则只拼接 /chat/completions
+
+        // 特殊处理智谱AI：智谱AI的baseUrl已经是 https://open.bigmodel.cn/api/paas/v4
+        // 不需要再拼接 /v1，直接拼接 /chat/completions
+        if (normalized.contains("open.bigmodel.cn")) {
+            return normalized + "/chat/completions";
+        }
+
+        // 其他服务：如果 baseUrl 已经包含 /v1（常见配置为 https://api.openai.com/v1），则只拼接 /chat/completions
         if (normalized.endsWith("/v1") || normalized.contains("/v1/")) {
             return normalized + "/chat/completions";
         }
