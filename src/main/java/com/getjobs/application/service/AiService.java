@@ -48,10 +48,17 @@ public class AiService {
      * @return AI 回复文本
      */
     public String sendRequest(String content) {
-        // 优先从环境变量读取 DeepSeek 配置，如果没有则从数据库读取
-        String baseUrl = System.getenv("DEEPSEEK_BASE_URL");
-        String apiKey = System.getenv("DEEPSEEK_API_KEY");
-        String model = System.getenv("DEEPSEEK_MODEL");
+        // 优先从环境变量读取智谱AI配置，如果没有则从数据库读取
+        String baseUrl = System.getenv("ZHIPU_BASE_URL");
+        String apiKey = System.getenv("ZHIPU_API_KEY");
+        String model = System.getenv("ZHIPU_MODEL");
+
+        // 如果智谱环境变量不存在，尝试DeepSeek配置
+        if (baseUrl == null || apiKey == null) {
+            baseUrl = System.getenv("DEEPSEEK_BASE_URL");
+            apiKey = System.getenv("DEEPSEEK_API_KEY");
+            model = System.getenv("DEEPSEEK_MODEL");
+        }
 
         // 如果环境变量不存在，则回退到数据库配置
         if (baseUrl == null || apiKey == null) {
@@ -61,13 +68,13 @@ public class AiService {
             model = model != null ? model : cfg.get("MODEL");
         }
 
-        // 如果仍然没有配置，使用默认值
-        if (baseUrl == null) baseUrl = "https://api.deepseek.com";
-        if (model == null) model = "deepseek-chat";
+        // 如果仍然没有配置，使用智谱默认值
+        if (baseUrl == null) baseUrl = "https://open.bigmodel.cn/api/paas/v4";
+        if (model == null) model = "glm-4";
 
         // 校验必需参数
         if (apiKey == null || apiKey.trim().isEmpty()) {
-            throw new RuntimeException("AI API Key 未配置，请设置 DEEPSEEK_API_KEY 环境变量或数据库配置");
+            throw new RuntimeException("AI API Key 未配置，请设置 ZHIPU_API_KEY 或 DEEPSEEK_API_KEY 环境变量或数据库配置");
         }
 
         log.info("使用AI配置 - BaseURL: {}, Model: {}, Key: {}...",
@@ -365,17 +372,17 @@ public class AiService {
     }
 
     /**
-     * 测试DeepSeek连接
+     * 测试AI连接（支持智谱和DeepSeek）
      * @return 测试结果
      */
     public String testDeepSeekConnection() {
         try {
             String testMessage = "你好，请简单回复一个字：是";
             String response = sendRequest(testMessage);
-            return "DeepSeek连接成功，响应: " + response;
+            return "AI连接成功，响应: " + response;
         } catch (Exception e) {
-            log.error("DeepSeek连接测试失败", e);
-            return "DeepSeek连接失败: " + e.getMessage();
+            log.error("AI连接测试失败", e);
+            return "AI连接失败: " + e.getMessage();
         }
     }
 
@@ -387,13 +394,25 @@ public class AiService {
         StringBuilder config = new StringBuilder();
         config.append("AI配置信息:\n");
 
-        // 环境变量配置
+        // 智谱AI环境变量配置
+        String zhipuBaseUrl = System.getenv("ZHIPU_BASE_URL");
+        String zhipuApiKey = System.getenv("ZHIPU_API_KEY");
+        String zhipuModel = System.getenv("ZHIPU_MODEL");
+
+        if (zhipuBaseUrl != null || zhipuApiKey != null) {
+            config.append("- 智谱AI环境变量配置:\n");
+            config.append("  ZHIPU_BASE_URL: ").append(zhipuBaseUrl != null ? zhipuBaseUrl : "未设置").append("\n");
+            config.append("  ZHIPU_API_KEY: ").append(zhipuApiKey != null ? maskApiKey(zhipuApiKey) : "未设置").append("\n");
+            config.append("  ZHIPU_MODEL: ").append(zhipuModel != null ? zhipuModel : "未设置").append("\n");
+        }
+
+        // DeepSeek环境变量配置
         String envBaseUrl = System.getenv("DEEPSEEK_BASE_URL");
         String envApiKey = System.getenv("DEEPSEEK_API_KEY");
         String envModel = System.getenv("DEEPSEEK_MODEL");
 
         if (envBaseUrl != null || envApiKey != null) {
-            config.append("- 环境变量配置:\n");
+            config.append("- DeepSeek环境变量配置:\n");
             config.append("  DEEPSEEK_BASE_URL: ").append(envBaseUrl != null ? envBaseUrl : "未设置").append("\n");
             config.append("  DEEPSEEK_API_KEY: ").append(envApiKey != null ? maskApiKey(envApiKey) : "未设置").append("\n");
             config.append("  DEEPSEEK_MODEL: ").append(envModel != null ? envModel : "未设置").append("\n");

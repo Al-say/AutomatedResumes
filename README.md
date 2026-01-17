@@ -79,11 +79,20 @@ cd get_jobs
 
 更多环境配置详情请点击：📚 [环境配置](https://github.com/loks666/get_jobs/wiki/环境配置)
 
-### 3️⃣ AI配置 (支持DeepSeek)
+### 3️⃣ AI配置 (支持智谱AI和DeepSeek)
 
 #### 环境变量配置 (推荐)
+
+**智谱AI配置:**
 ```bash
 # 编辑 ~/.zshrc 或 ~/.bash_profile
+export ZHIPU_API_KEY="35c61b092de249a9811777230a87c088.WwqBx9gNvI8UqEJe"
+export ZHIPU_BASE_URL="https://open.bigmodel.cn/api/paas/v4"
+export ZHIPU_MODEL="glm-4"  # 或 glm-3-turbo, glm-4v 等
+```
+
+**DeepSeek配置 (备选):**
+```bash
 export DEEPSEEK_API_KEY="sk-your-actual-key-here"
 export DEEPSEEK_BASE_URL="https://api.deepseek.com"
 export DEEPSEEK_MODEL="deepseek-chat"  # 或 deepseek-reasoner
@@ -92,7 +101,17 @@ export DEEPSEEK_MODEL="deepseek-chat"  # 或 deepseek-reasoner
 #### 或通过网页界面配置
 访问前端界面进行AI配置设置。
 
-#### DeepSeek配置说明
+#### AI配置说明
+
+**智谱AI:**
+- **API_KEY**: 从 [智谱AI官网](https://open.bigmodel.cn/) 获取，格式为 `{API_KEY}.{SECRET_KEY}`
+- **BASE_URL**: `https://open.bigmodel.cn/api/paas/v4` (固定)
+- **MODEL**: 
+  - `glm-4`: 旗舰大模型，适合复杂任务
+  - `glm-3-turbo`: 轻量级模型，响应速度快
+  - `glm-4v`: 支持视觉输入的模型
+
+**DeepSeek (备选):**
 - **API_KEY**: 从 [DeepSeek官网](https://platform.deepseek.com/) 获取
 - **BASE_URL**: `https://api.deepseek.com` (固定)
 - **MODEL**: 
