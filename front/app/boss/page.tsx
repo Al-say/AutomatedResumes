@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select } from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import PageHeader from '@/app/components/PageHeader'
 import AnalysisContent from '@/app/boss/analysis/AnalysisContent'
@@ -627,31 +627,39 @@ export default function BossPage() {
                 <div className="space-y-2">
                   <Label htmlFor="city">工作城市</Label>
                   <Select
-                    id="city"
                     value={config.cityCode || ''}
-                    onChange={(e) => setConfig({ ...config, cityCode: e.target.value })}
+                    onValueChange={(value) => setConfig({ ...config, cityCode: value })}
                   >
-                    {options.city.map((city) => (
-                      <option key={city.id} value={city.code}>
-                        {city.name}
-                      </option>
-                    ))}
-                </Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="请选择城市" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {options.city.map((city) => (
+                        <SelectItem key={city.id} value={city.code}>
+                          {city.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 <p className="text-xs text-muted-foreground">目标工作城市（按设定顺序显示）</p>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="jobType">职位类型</Label>
                 <Select
-                  id="jobType"
                   value={config.jobType || ''}
-                  onChange={(e) => setConfig({ ...config, jobType: e.target.value })}
+                  onValueChange={(value) => setConfig({ ...config, jobType: value })}
                 >
-                  {options.jobType.map((type) => (
-                    <option key={type.id} value={type.code}>
-                      {type.name}
-                    </option>
-                  ))}
+                  <SelectTrigger>
+                    <SelectValue placeholder="请选择职位类型" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {options.jobType.map((type) => (
+                      <SelectItem key={type.id} value={type.code}>
+                        {type.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground">选择职位类型</p>
               </div>
@@ -671,12 +679,16 @@ export default function BossPage() {
               <div className="space-y-2">
                 <Label htmlFor="filterDeadHr">HR活跃过滤</Label>
                 <Select
-                  id="filterDeadHr"
                   value={String(config.filterDeadHr ?? 0)}
-                  onChange={(e) => setConfig({ ...config, filterDeadHr: Number(e.target.value) })}
+                  onValueChange={(value) => setConfig({ ...config, filterDeadHr: Number(value) })}
                 >
-                  <option value="0">关闭</option>
-                  <option value="1">开启</option>
+                  <SelectTrigger>
+                    <SelectValue placeholder="选择过滤状态" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">关闭</SelectItem>
+                    <SelectItem value="1">开启</SelectItem>
+                  </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground">开启后将过滤活跃状态包含“年”的HR，但仍保存数据。</p>
               </div>
@@ -777,12 +789,16 @@ export default function BossPage() {
               <div className="flex gap-2">
                 <Select
                   value={blacklistType}
-                  onChange={(e) => setBlacklistType(e.target.value)}
-                  className="w-32"
+                  onValueChange={setBlacklistType}
                 >
-                  <option value="company">公司</option>
-                  <option value="job">岗位</option>
-                  <option value="recruiter">HR</option>
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="company">公司</SelectItem>
+                    <SelectItem value="job">岗位</SelectItem>
+                    <SelectItem value="recruiter">HR</SelectItem>
+                  </SelectContent>
                 </Select>
                 <Input
                   value={newBlacklistKeyword}
@@ -1056,6 +1072,7 @@ function MultiSelect({
         window.removeEventListener('resize', handleUpdate)
       }
     }
+    return undefined
   }, [open, updatePosition])
 
   // 点击组件外部或焦点移出时关闭下拉

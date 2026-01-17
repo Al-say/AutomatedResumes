@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select } from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import PageHeader from '@/app/components/PageHeader'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import AnalysisContent from '@/app/51job/analysis/AnalysisContent'
@@ -500,13 +500,17 @@ export default function Job51Page() {
                     ) : (
                       <Select
                         value={config.jobArea || ''}
-                        onChange={(e) => setConfig((c) => ({ ...c, jobArea: e.target.value }))}
-                        placeholder="请选择城市"
+                        onValueChange={(value) => setConfig((c) => ({ ...c, jobArea: value }))}
                       >
-                        <option value="">请选择城市</option>
-                        {options.jobArea.map((o) => (
-                          <option key={o.code} value={o.code}>{o.name}</option>
-                        ))}
+                        <SelectTrigger>
+                          <SelectValue placeholder="请选择城市" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">请选择城市</SelectItem>
+                          {options.jobArea.map((o) => (
+                            <SelectItem key={o.code} value={o.code}>{o.name}</SelectItem>
+                          ))}
+                        </SelectContent>
                       </Select>
                     )}
                     <p className="text-xs text-muted-foreground">

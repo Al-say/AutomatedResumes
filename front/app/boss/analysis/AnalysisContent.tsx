@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Select } from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import PageHeader from "@/app/components/PageHeader"
 import { BiRefresh, BiDownload, BiBarChart, BiLineChart, BiPieChart, BiBriefcase } from "react-icons/bi"
@@ -627,7 +627,7 @@ export default function AnalysisContent({ showHeader = false }: { showHeader?: b
             >
               <BiBarChart className="mr-2" /> 应用筛选
             </Button>
-            <Button variant="success" onClick={exportCSV} disabled={exporting}>
+            <Button variant="secondary" onClick={exportCSV} disabled={exporting}>
               <BiDownload className="mr-2" /> {exporting ? "导出中..." : "导出CSV"}
             </Button>
             <Button variant="outline" onClick={onReload} disabled={reloading}>
@@ -877,17 +877,21 @@ export default function AnalysisContent({ showHeader = false }: { showHeader?: b
               <Label className="text-sm">每页</Label>
               <Select
                 value={String(inputSize)}
-                onChange={(e) => {
-                  const v = Number(e.target.value)
+                onValueChange={(value) => {
+                  const v = Number(value)
                   setInputSize(v)
                   loadList(1, Math.max(1, v))
                 }}
-                className="h-8 w-28"
               >
-                <option value="20">20</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="200">200</option>
+                <SelectTrigger className="h-8 w-28">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="20">20</SelectItem>
+                  <SelectItem value="50">50</SelectItem>
+                  <SelectItem value="100">100</SelectItem>
+                  <SelectItem value="200">200</SelectItem>
+                </SelectContent>
               </Select>
               <span className="text-sm text-muted-foreground">条</span>
             </div>
@@ -913,7 +917,7 @@ export default function AnalysisContent({ showHeader = false }: { showHeader?: b
                 />
                 <div className="flex justify-end gap-2 mt-4">
                   <Button variant="outline" onClick={selectDialogText} className="rounded-full px-4">全选</Button>
-                  <Button variant="success" onClick={copyDialogText} className="rounded-full px-4">复制</Button>
+                  <Button variant="secondary" onClick={copyDialogText} className="rounded-full px-4">复制</Button>
                   <Button onClick={() => setShowTextDialog(false)} className="rounded-full px-4">关闭</Button>
                 </div>
               </CardContent>

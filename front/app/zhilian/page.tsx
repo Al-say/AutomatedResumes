@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select } from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import AnalysisContent from '@/app/zhilian/analysis/AnalysisContent'
 import PageHeader from '@/app/components/PageHeader'
@@ -305,12 +305,16 @@ export default function ZhilianPage() {
                     <Label>城市</Label>
                     <Select
                       value={config.cityCode || ''}
-                      onChange={(e) => setConfig((c) => ({ ...c, cityCode: e.target.value }))}
-                      placeholder="请选择城市"
+                      onValueChange={(value) => setConfig((c) => ({ ...c, cityCode: value }))}
                     >
-                      {options.city.map((o) => (
-                        <option key={o.code} value={o.code}>{o.name}</option>
-                      ))}
+                      <SelectTrigger>
+                        <SelectValue placeholder="请选择城市" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {options.city.map((o) => (
+                          <SelectItem key={o.code} value={o.code}>{o.name}</SelectItem>
+                        ))}
+                      </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-2">

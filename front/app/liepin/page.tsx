@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select } from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import AnalysisContent from '@/app/liepin/analysis/AnalysisContent'
 import PageHeader from '@/app/components/PageHeader'
@@ -371,16 +371,20 @@ export default function LiepinPage() {
                   />
                 ) : (
                   <Select
-                    id="city"
                     value={config.city || ''}
-                    onChange={(e) => setConfig({ ...config, city: e.target.value })}
+                    onValueChange={(value) => setConfig({ ...config, city: value })}
                   >
-                    <option value="">请选择城市</option>
-                    {options.city.map((city) => (
-                      <option key={city.id} value={city.name}>
-                        {city.name}
-                      </option>
-                    ))}
+                    <SelectTrigger>
+                      <SelectValue placeholder="请选择城市" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">请选择城市</SelectItem>
+                      {options.city.map((city) => (
+                        <SelectItem key={city.id} value={city.name}>
+                          {city.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
                   </Select>
                 )}
                 <p className="text-xs text-muted-foreground">

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Select } from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import PageHeader from "@/app/components/PageHeader"
 import { BiRefresh, BiDownload, BiBarChart, BiLineChart, BiPieChart, BiBriefcase } from "react-icons/bi"
@@ -588,23 +588,33 @@ export default function AnalysisContent({ showHeader = false }: { showHeader?: b
             </div>
             <div>
               <Label htmlFor="experience">经验</Label>
-              <Select id="experience" value={experience} onChange={(e) => setExperience(e.target.value)}>
-                <option value="">不限</option>
-                <option value="应届">应届</option>
-                <option value="1-3年">1-3年</option>
-                <option value="3-5年">3-5年</option>
-                <option value="5-10年">5-10年</option>
-                <option value="10年以上">10年以上</option>
+              <Select value={experience} onValueChange={setExperience}>
+                <SelectTrigger>
+                  <SelectValue placeholder="请选择经验" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">不限</SelectItem>
+                  <SelectItem value="应届">应届</SelectItem>
+                  <SelectItem value="1-3年">1-3年</SelectItem>
+                  <SelectItem value="3-5年">3-5年</SelectItem>
+                  <SelectItem value="5-10年">5-10年</SelectItem>
+                  <SelectItem value="10年以上">10年以上</SelectItem>
+                </SelectContent>
               </Select>
             </div>
             <div>
               <Label htmlFor="degree">学历</Label>
-              <Select id="degree" value={degree} onChange={(e) => setDegree(e.target.value)}>
-                <option value="">不限</option>
-                <option value="大专">大专</option>
-                <option value="本科">本科</option>
-                <option value="硕士">硕士</option>
-                <option value="博士">博士</option>
+              <Select value={degree} onValueChange={setDegree}>
+                <SelectTrigger>
+                  <SelectValue placeholder="请选择学历" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">不限</SelectItem>
+                  <SelectItem value="大专">大专</SelectItem>
+                  <SelectItem value="本科">本科</SelectItem>
+                  <SelectItem value="硕士">硕士</SelectItem>
+                  <SelectItem value="博士">博士</SelectItem>
+                </SelectContent>
               </Select>
             </div>
             <div className="grid grid-cols-2 gap-2">

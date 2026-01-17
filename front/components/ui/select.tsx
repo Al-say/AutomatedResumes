@@ -63,6 +63,7 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
           window.removeEventListener('resize', handleUpdate)
         }
       }
+      return undefined
     }, [open, updatePosition])
 
     // 点击外部关闭下拉框

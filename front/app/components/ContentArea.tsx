@@ -1,6 +1,7 @@
 "use client"
 import { usePathname } from 'next/navigation'
-import { ReactNode, useMemo } from 'react'
+import { useMemo } from 'react'
+import type { ReactNode } from 'react'
 import { motion } from 'framer-motion'
 
 export default function ContentArea({ children }: { children: ReactNode }) {

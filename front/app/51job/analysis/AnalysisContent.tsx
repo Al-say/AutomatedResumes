@@ -217,7 +217,7 @@ export default function AnalysisContent({ showHeader = false }:{ showHeader?: bo
           </div>
           <div className="mt-4 flex gap-3">
             <Button onClick={async()=>{ await loadList(1,size); await loadStats() }} disabled={loadingList}><BiBarChart className="mr-2" /> 应用筛选</Button>
-            <Button variant="success" onClick={exportCSV} disabled={exporting}><BiDownload className="mr-2" /> {exporting?"导出中...":"导出CSV"}</Button>
+            <Button variant="secondary" onClick={exportCSV} disabled={exporting}><BiDownload className="mr-2" /> {exporting?"导出中...":"导出CSV"}</Button>
             <Button variant="outline" onClick={onReload} disabled={reloading}><BiRefresh className="mr-2" /> 刷新数据</Button>
           </div>
         </CardContent>
