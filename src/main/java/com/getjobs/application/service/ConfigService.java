@@ -4,10 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.getjobs.application.entity.ConfigEntity;
 import com.getjobs.application.mapper.ConfigMapper;
 import com.getjobs.application.entity.LiepinConfigEntity;
-import com.getjobs.application.service.LiepinService;
-import com.getjobs.application.service.BossService;
-import com.getjobs.application.service.ZhilianService;
-import com.getjobs.application.service.Job51Service;
 import com.getjobs.worker.boss.BossConfig;
 import com.getjobs.worker.job51.Job51Config;
 import com.getjobs.worker.liepin.LiepinConfig;
@@ -171,6 +167,48 @@ public class ConfigService {
             log.warn("配置键不存在: {}", configKey);
         }
 
+        return false;
+    }
+
+    /**
+     * 创建或更新配置（Upsert）
+     * @param configKey 配置键
+     * @param configValue 配置值
+     * @param category 分类（可选）
+     * @param description 描述（可选）
+     * @return 是否成功
+     */
+    @Transactional
+    public boolean upsertConfig(String configKey, String configValue, String category, String description) {
+        ConfigEntity config = getConfigByKey(configKey);
+
+        if (config != null) {
+            // 更新已存在的配置
+            config.setConfigValue(configValue);
+            if (category != null) config.setCategory(category);
+            if (description != null) config.setDescription(description);
+            config.setUpdatedAt(LocalDateTime.now());
+            int result = configMapper.updateById(config);
+            if (result > 0) {
+                log.info("更新配置成功: {} = {}", configKey, configValue);
+                return true;
+            }
+        } else {
+            // 创建新配置
+            ConfigEntity newConfig = new ConfigEntity();
+            newConfig.setConfigKey(configKey);
+            newConfig.setConfigValue(configValue);
+            newConfig.setConfigType("string");
+            newConfig.setCategory(category != null ? category : "general");
+            newConfig.setDescription(description);
+            newConfig.setCreatedAt(LocalDateTime.now());
+            newConfig.setUpdatedAt(LocalDateTime.now());
+            int result = configMapper.insert(newConfig);
+            if (result > 0) {
+                log.info("创建配置成功: {} = {}", configKey, configValue);
+                return true;
+            }
+        }
         return false;
     }
 

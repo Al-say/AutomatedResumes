@@ -26,14 +26,22 @@ const nextConfig: NextConfig = {
 
   // 图片优化
   images: {
-    // 允许的图片域名
-    domains: ['localhost'],
+    // 使用 remotePatterns 替代已弃用的 domains
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+    ],
     // 图片优化设置
     formats: ['image/webp', 'image/avif'],
     // 设备像素比
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
+
+  // Turbopack 配置（Next.js 16 默认使用 Turbopack）
+  turbopack: {},
 
   // Webpack优化
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
@@ -95,8 +103,6 @@ const nextConfig: NextConfig = {
   ...(process.env.NODE_ENV === 'development' && {
     // 启用React严格模式
     reactStrictMode: true,
-    // 启用SWC编译器
-    swcMinify: true,
   }),
 
   // 性能监控

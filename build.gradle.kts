@@ -71,6 +71,9 @@ tasks.named<BootRun>("bootRun") {
     systemProperty("file.encoding", "UTF-8")
     systemProperty("sun.stdout.encoding", "UTF-8")
     systemProperty("sun.stderr.encoding", "UTF-8")
+    systemProperty("sun.jnu.encoding", "UTF-8")
+    systemProperty("console.encoding", "UTF-8")
+    jvmArgs("-Dfile.encoding=UTF-8", "-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8")
     // 示例：把当天日期传给日志或应用
     systemProperty("LOG_DATE", LocalDate.now().toString())
     // 可选：对齐端口

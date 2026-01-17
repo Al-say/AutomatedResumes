@@ -1,6 +1,5 @@
 package com.getjobs.application.controller;
 
-import com.getjobs.application.entity.BossJobDataEntity;
 import com.getjobs.application.service.BossService;
 import org.springframework.web.bind.annotation.*;
 

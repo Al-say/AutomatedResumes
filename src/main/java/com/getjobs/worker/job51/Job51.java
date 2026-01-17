@@ -128,11 +128,8 @@ public class Job51 {
                         try {
                             String url = r.url();
                             if (url != null && url.contains("/api/job/search-pc") && "GET".equalsIgnoreCase(r.request().method())) {
-                                int status = 0;
-                                try { status = r.status(); } catch (Throwable ignored) {}
                                 String text = null;
                                 try { text = r.text(); } catch (Throwable ignored) {}
-                                int len = text == null ? 0 : text.length();
                                 // 基于 URL 的 requestId 做去重，避免重复解析
                                 String requestId = null;
                                 try {

@@ -93,14 +93,14 @@ cd get_jobs
 **智谱AI配置:**
 ```bash
 # 编辑 ~/.zshrc 或 ~/.bash_profile
-export ZHIPU_API_KEY="35c61b092de249a9811777230a87c088.WwqBx9gNvI8UqEJe"
+export ZHIPU_API_KEY="your-api-key-here"
 export ZHIPU_BASE_URL="https://open.bigmodel.cn/api/paas/v4"
 export ZHIPU_MODEL="glm-4"  # 或 glm-3-turbo, glm-4v 等
 ```
 
 **DeepSeek配置 (备选):**
 ```bash
-export DEEPSEEK_API_KEY="sk-your-actual-key-here"
+export DEEPSEEK_API_KEY="your-api-key-here"
 export DEEPSEEK_BASE_URL="https://api.deepseek.com"
 export DEEPSEEK_MODEL="deepseek-chat"  # 或 deepseek-reasoner
 ```

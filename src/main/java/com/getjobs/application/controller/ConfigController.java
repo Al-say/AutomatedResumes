@@ -167,4 +167,41 @@ public class ConfigController {
 
         return ResponseEntity.ok(response);
     }
+
+    /**
+     * 初始化AI配置（如果不存在则创建默认值）
+     * @return 初始化结果
+     */
+    @PostMapping("/init-ai")
+    public ResponseEntity<Map<String, Object>> initAiConfig(@RequestBody(required = false) Map<String, String> requestBody) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            // 默认配置
+            String baseUrl = requestBody != null && requestBody.containsKey("BASE_URL") 
+                ? requestBody.get("BASE_URL") : "https://api.deepseek.com/v1";
+            String apiKey = requestBody != null && requestBody.containsKey("API_KEY") 
+                ? requestBody.get("API_KEY") : "";
+            String model = requestBody != null && requestBody.containsKey("MODEL") 
+                ? requestBody.get("MODEL") : "deepseek-chat";
+
+            // 创建或更新配置
+            configService.upsertConfig("BASE_URL", baseUrl, "ai", "AI API基础URL");
+            configService.upsertConfig("API_KEY", apiKey, "ai", "AI API密钥");
+            configService.upsertConfig("MODEL", model, "ai", "AI模型名称");
+
+            response.put("success", true);
+            response.put("message", "AI配置初始化成功");
+            response.put("configs", Map.of("BASE_URL", baseUrl, "API_KEY", apiKey.isEmpty() ? "(未设置)" : "(已设置)", "MODEL", model));
+
+            log.info("AI配置初始化完成: BASE_URL={}, MODEL={}", baseUrl, model);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            log.error("初始化AI配置失败", e);
+            response.put("success", false);
+            response.put("message", "初始化AI配置失败: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
 }

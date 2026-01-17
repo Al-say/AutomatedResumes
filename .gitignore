@@ -60,6 +60,21 @@ chromedriver
 db/
 *.db
 
+# Sensitive configuration files - NEVER commit these!
+.env
+.env.*
+*.env
+secrets.yaml
+secrets.json
+**/secrets/
+*.key
+*.pem
+
+# API keys and credentials
+config.local.yaml
+application-local.yaml
+application-local.yml
+
 # JDK installation (should not be version controlled)
 jdk/
 
