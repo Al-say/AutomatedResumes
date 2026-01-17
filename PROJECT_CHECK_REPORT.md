@@ -116,7 +116,7 @@ spring:
 ```yaml
 spring:
   env:
-    ZHIPU_API_KEY: "YOUR_GITHUB_TOKEN_HERE"
+    ZHIPU_API_KEY: "YOUR_ZHIPU_API_KEY_HERE"
     ZHIPU_BASE_URL: "https://open.bigmodel.cn/api/paas/v4"
     ZHIPU_MODEL: "glm-4"
 ```
