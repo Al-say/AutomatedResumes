@@ -11,12 +11,13 @@ const nextConfig: NextConfig = {
     APP_VERSION: serverConfig.app.version,
   },
 
-  // 静态导出配置
-  output: 'export',
-  // 禁用图片优化（静态导出不支持）
-  images: {
-    unoptimized: true,
-  },
+  // 只在生产环境使用静态导出
+  ...(process.env.NODE_ENV === 'production' && {
+    output: 'export',
+    images: {
+      unoptimized: true,
+    },
+  }),
 };
 
 export default nextConfig;
