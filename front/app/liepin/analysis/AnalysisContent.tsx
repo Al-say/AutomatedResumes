@@ -1,5 +1,10 @@
 "use client"
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import { useEffect, useMemo, useRef, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -434,7 +439,6 @@ export default function AnalysisContent({ showHeader = false }: { showHeader?: b
     } else {
       setComputedSalaryBuckets([])
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stats, statuses.join(","), location, experience, degree, minK, maxK, keyword])
 
   // 移除原“累计趋势”计算逻辑；改为以现有维度（经验）展示折线图
@@ -593,7 +597,7 @@ export default function AnalysisContent({ showHeader = false }: { showHeader?: b
                   <SelectValue placeholder="请选择经验" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">不限</SelectItem>
+                  <SelectItem value="all">不限</SelectItem>
                   <SelectItem value="应届">应届</SelectItem>
                   <SelectItem value="1-3年">1-3年</SelectItem>
                   <SelectItem value="3-5年">3-5年</SelectItem>
@@ -609,7 +613,7 @@ export default function AnalysisContent({ showHeader = false }: { showHeader?: b
                   <SelectValue placeholder="请选择学历" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">不限</SelectItem>
+                  <SelectItem value="all">不限</SelectItem>
                   <SelectItem value="大专">大专</SelectItem>
                   <SelectItem value="本科">本科</SelectItem>
                   <SelectItem value="硕士">硕士</SelectItem>

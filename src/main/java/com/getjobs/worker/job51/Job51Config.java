@@ -1,11 +1,9 @@
 package com.getjobs.worker.job51;
 
-import com.getjobs.worker.utils.JobUtils;
 import lombok.Data;
 import lombok.SneakyThrows;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author loks666

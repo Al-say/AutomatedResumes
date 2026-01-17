@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /**
  * 51job 岗位快照数据实体
  * 保存从 51job 搜索接口返回的有价值字段

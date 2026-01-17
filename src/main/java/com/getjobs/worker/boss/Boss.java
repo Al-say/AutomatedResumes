@@ -770,6 +770,7 @@ public class Boss {
     /**
      * 注册页面响应监听：拦截 /wapi/zpgeek/job/detail.json 请求并解析写库
      */
+    @SuppressWarnings("unused")
     private void attachJobDetailResponseListener() {
         if (page == null) return;
         page.onResponse(resp -> {
@@ -933,6 +934,7 @@ public class Boss {
      * 期望的最低薪资如果比岗位最高薪资还小，则不符合（薪资给的太少）
      * 期望的最高薪资如果比岗位最低薪资还小，则不符合(要求太高满足不了)
      */
+    @SuppressWarnings("unused")
     private boolean isSalaryNotExpected(String salary) {
         try {
             // 1. 如果没有期望薪资范围，直接返回 false，表示"薪资并非不符合预期"
@@ -1103,6 +1105,7 @@ public class Boss {
         return null;
     }
 
+    @SuppressWarnings("unused")
     private void waitForSliderVerify(Page page) {
         String SLIDER_URL = "https://www.zhipin.com/web/user/safe/verify-slider";
         // 最多等待5分钟（防呆，防止死循环）
@@ -1129,6 +1132,7 @@ public class Boss {
     }
 
 
+    @SuppressWarnings("unused")
     private boolean isLoginRequired() {
         try {
             Locator buttonLocator = page.locator(LOGIN_BTNS);

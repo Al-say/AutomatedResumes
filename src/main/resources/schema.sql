@@ -245,7 +245,7 @@ CREATE TABLE IF NOT EXISTS job51_config (
     debugger INTEGER DEFAULT 0,
     wait_time INTEGER DEFAULT 3,
     keywords TEXT,
-    city_code TEXT,
+    job_area TEXT,
     salary TEXT,
     education TEXT,
     experience TEXT,
@@ -262,10 +262,10 @@ CREATE TABLE IF NOT EXISTS job51_config (
 -- ========================================
 CREATE TABLE IF NOT EXISTS job51_option (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    type TEXT NOT NULL,
-    name TEXT NOT NULL,
-    code TEXT NOT NULL,
-    sort_order INTEGER DEFAULT 999,
+    type TEXT NOT NULL,               -- 选项类型: jobArea/salary/education/experience/company_size/company_type
+    name TEXT NOT NULL,               -- 选项名称
+    code TEXT NOT NULL,               -- 选项代码
+    sort_order INTEGER DEFAULT 999,   -- 排序
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -425,5 +425,12 @@ INSERT OR IGNORE INTO boss_option (type, name, code, sort_order) VALUES ('stage'
 INSERT OR IGNORE INTO boss_option (type, name, code, sort_order) VALUES ('stage', 'D轮及以上', '806', 6);
 INSERT OR IGNORE INTO boss_option (type, name, code, sort_order) VALUES ('stage', '已上市', '807', 7);
 INSERT OR IGNORE INTO boss_option (type, name, code, sort_order) VALUES ('stage', '不需要融资', '808', 8);
+
+-- 51Job 相关默认数据
+INSERT OR IGNORE INTO job51_config (id, keywords, job_area, salary, say_hi, enable_ai)
+VALUES (1, '["Java开发"]', '["不限"]', '["不限"]', '您好，我对贵公司的岗位很感兴趣，期待与您进一步沟通！', 0);
+
+INSERT OR IGNORE INTO job51_option (type, name, code, sort_order) VALUES ('jobArea', '不限', '0', 0);
+INSERT OR IGNORE INTO job51_option (type, name, code, sort_order) VALUES ('salary', '不限', '0', 0);
 
 PRAGMA optimize;

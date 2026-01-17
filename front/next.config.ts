@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 // 读取服务器配置
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const serverConfig = require('./server.config.js');
 
 const nextConfig: NextConfig = {
@@ -44,7 +45,7 @@ const nextConfig: NextConfig = {
   turbopack: {},
 
   // Webpack优化
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+  webpack: (config, { dev, isServer }) => {
     // 优化构建性能
     if (!dev && !isServer) {
       config.optimization.splitChunks.cacheGroups = {
@@ -75,6 +76,7 @@ const nextConfig: NextConfig = {
 
     // 添加bundle分析器（仅开发环境）
     if (dev && !isServer && process.env.ANALYZE === 'true') {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
       config.plugins.push(
         new BundleAnalyzerPlugin({

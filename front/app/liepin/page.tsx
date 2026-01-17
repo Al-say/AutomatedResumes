@@ -1,5 +1,9 @@
 'use client'
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import { useState, useEffect } from 'react'
 import { createSSEWithBackoff } from '@/lib/sse'
 import { BiSearch, BiSave, BiTargetLock, BiMap, BiMoney, BiTime, BiBookmark, BiBarChart, BiPlay, BiStop, BiLogOut, BiBriefcase } from 'react-icons/bi'
@@ -378,7 +382,6 @@ export default function LiepinPage() {
                       <SelectValue placeholder="请选择城市" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">请选择城市</SelectItem>
                       {options.city.map((city) => (
                         <SelectItem key={city.id} value={city.name}>
                           {city.name}

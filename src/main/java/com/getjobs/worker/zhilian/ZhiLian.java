@@ -42,6 +42,7 @@ public class ZhiLian {
 
     private final List<Job> resultList = new ArrayList<>();
     private boolean isLimit = false;
+    @SuppressWarnings("unused")
     private int maxPage = 500;
 
     private static final String HOME_URL = "https://www.zhaopin.com/sou/";
@@ -371,6 +372,7 @@ public class ZhiLian {
     /**
      * 处理投递弹窗
      */
+    @SuppressWarnings("unused")
     private void handleDeliveryDialog() {
         try {
             // 获取所有页面
@@ -507,8 +509,9 @@ public class ZhiLian {
     }
 
     /**
-     * 设置最大页数（已废弃：使用“下一页不可点击”+最多50页）
+     * 设置最大页数（已废弃：使用"下一页不可点击"+最多50页）
      */
+    @SuppressWarnings("unused")
     private void setMaxPages() {
         // 保留方法避免旧调用报错，但不再依赖输入框改页码
         maxPage = 50;

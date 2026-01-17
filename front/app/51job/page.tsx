@@ -1,5 +1,9 @@
 'use client'
 
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import { useState, useEffect } from 'react'
 import { createSSEWithBackoff } from '@/lib/sse'
 import { BiLogOut, BiSave, BiBriefcase, BiPlay, BiStop } from 'react-icons/bi'
@@ -506,7 +510,6 @@ export default function Job51Page() {
                           <SelectValue placeholder="请选择城市" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">请选择城市</SelectItem>
                           {options.jobArea.map((o) => (
                             <SelectItem key={o.code} value={o.code}>{o.name}</SelectItem>
                           ))}

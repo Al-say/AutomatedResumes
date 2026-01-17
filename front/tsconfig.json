@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    // 忽略 TypeScript 6.x 的弃用警告
+    "ignoreDeprecations": "6.0",
+
     // 目标ES版本优化
     "target": "ES2020",
     "lib": [

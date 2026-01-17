@@ -1,8 +1,5 @@
 package com.getjobs.application.init;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.getjobs.application.entity.ZhilianOptionEntity;
-import com.getjobs.application.mapper.ZhilianOptionMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -11,7 +8,6 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.Statement;
-import java.time.LocalDateTime;
  
 
 /**
@@ -25,7 +21,6 @@ import java.time.LocalDateTime;
 public class ZhilianOptionInitializer implements CommandLineRunner {
 
     private final DataSource dataSource;
-    private final ZhilianOptionMapper zhilianOptionMapper;
 
     @Override
     public void run(String... args) throws Exception {
@@ -50,32 +45,4 @@ public class ZhilianOptionInitializer implements CommandLineRunner {
             log.warn("创建 zhilian_option 表失败: {}", e.getMessage());
         }
     }
-
-    // 已移除基于 city.json 的种子插入方法
-
-    private void insertIfNotExists(String type, String name, String code, int sortOrder) {
-        try {
-            ZhilianOptionEntity existing = zhilianOptionMapper.selectOne(
-                    new QueryWrapper<ZhilianOptionEntity>()
-                            .eq("type", type)
-                            .eq("code", code)
-                            .last("LIMIT 1")
-            );
-            if (existing != null) return;
-
-            LocalDateTime now = LocalDateTime.now();
-            ZhilianOptionEntity e = new ZhilianOptionEntity();
-            e.setType(type);
-            e.setName(name);
-            e.setCode(code);
-            e.setSortOrder(sortOrder);
-            e.setCreatedAt(now);
-            e.setUpdatedAt(now);
-            zhilianOptionMapper.insert(e);
-        } catch (Exception ex) {
-            log.warn("插入城市选项失败 code={}: {}", code, ex.getMessage());
-        }
-    }
-
-    // 已移除 CityItem 记录类型
 }

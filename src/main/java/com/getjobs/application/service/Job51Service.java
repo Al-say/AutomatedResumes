@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.Statement;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -183,23 +182,6 @@ public class Job51Service {
             stmt.execute(createSql);
         } catch (Exception e) {
             log.warn("创建 job51_option 表失败: {}", e.getMessage());
-        }
-    }
-
-    // 初始化逻辑移除：数据由外部迁移并在数据库维护，无需自动填充
-
-    private void insertOption(String type, String name, String code, int sortOrder, LocalDateTime now) {
-        try {
-            Job51OptionEntity e = new Job51OptionEntity();
-            e.setType(type);
-            e.setName(name);
-            e.setCode(code);
-            e.setSortOrder(sortOrder);
-            e.setCreatedAt(now);
-            e.setUpdatedAt(now);
-            job51OptionMapper.insert(e);
-        } catch (Exception ex) {
-            log.warn("写入选项失败 type={} name={} code={}: {}", type, name, code, ex.getMessage());
         }
     }
 

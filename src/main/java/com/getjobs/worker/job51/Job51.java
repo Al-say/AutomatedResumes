@@ -713,6 +713,7 @@ public class Job51 {
     /**
      * 采集当前页所有岗位的 jobId（解析 jobdetail 链接/数据属性）
      */
+    @SuppressWarnings("unused")
     private List<Long> collectJobIdsOnPage() {
         List<Long> ids = new ArrayList<>();
         try {
