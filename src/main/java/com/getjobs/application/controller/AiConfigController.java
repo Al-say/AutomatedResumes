@@ -126,4 +126,44 @@ public class AiConfigController {
             return ResponseEntity.internalServerError().body(response);
         }
     }
+
+    /**
+     * 测试DeepSeek连接
+     */
+    @GetMapping("/test-deepseek")
+    public ResponseEntity<Map<String, Object>> testDeepSeek() {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            String result = aiService.testDeepSeekConnection();
+            response.put("success", true);
+            response.put("data", result);
+            response.put("message", "DeepSeek连接测试完成");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("DeepSeek连接测试失败", e);
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    /**
+     * 获取当前AI配置信息
+     */
+    @GetMapping("/config-info")
+    public ResponseEntity<Map<String, Object>> getConfigInfo() {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            String configInfo = aiService.getCurrentAiConfig();
+            response.put("success", true);
+            response.put("data", configInfo);
+            response.put("message", "获取配置信息成功");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("获取配置信息失败", e);
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
 }

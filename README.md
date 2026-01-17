@@ -79,7 +79,30 @@ cd get_jobs
 
 更多环境配置详情请点击：📚 [环境配置](https://github.com/loks666/get_jobs/wiki/环境配置)
 
-### 3️⃣ 网页端修改配置，并保存(一般默认即可,需要修改自己的地区和岗位)
+### 3️⃣ AI配置 (支持DeepSeek)
+
+#### 环境变量配置 (推荐)
+```bash
+# 编辑 ~/.zshrc 或 ~/.bash_profile
+export DEEPSEEK_API_KEY="sk-your-actual-key-here"
+export DEEPSEEK_BASE_URL="https://api.deepseek.com"
+export DEEPSEEK_MODEL="deepseek-chat"  # 或 deepseek-reasoner
+```
+
+#### 或通过网页界面配置
+访问前端界面进行AI配置设置。
+
+#### DeepSeek配置说明
+- **API_KEY**: 从 [DeepSeek官网](https://platform.deepseek.com/) 获取
+- **BASE_URL**: `https://api.deepseek.com` (固定)
+- **MODEL**: 
+  - `deepseek-chat`: 对话模型，适合日常使用
+  - `deepseek-reasoner`: R1推理模型，更擅长复杂推理
+
+#### 测试连接
+启动后端服务，访问：
+- `http://localhost:8888/api/ai/test-deepseek` - 测试连接
+- `http://localhost:8888/api/ai/config-info` - 查看配置信息
 
 - 🤖 AI配置
 

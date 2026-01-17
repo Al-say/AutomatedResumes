@@ -31,16 +31,48 @@ public class AiService {
     private final AiMapper aiMapper;
 
     /**
+     * 隐藏API密钥，只显示前6位和后4位
+     * @param apiKey 原始API密钥
+     * @return 隐藏后的密钥字符串
+     */
+    private String maskApiKey(String apiKey) {
+        if (apiKey == null || apiKey.length() < 8) {
+            return "INVALID_KEY";
+        }
+        return apiKey.substring(0, 6) + "********" + apiKey.substring(apiKey.length() - 4);
+    }
+
+    /**
      * 发送 AI 请求（非流式）并返回回复内容。
      * @param content 用户消息内容
      * @return AI 回复文本
      */
     public String sendRequest(String content) {
-        // 读取并校验配置
-        var cfg = configService.getAiConfigs();
-        String baseUrl = cfg.get("BASE_URL");
-        String apiKey = cfg.get("API_KEY");
-        String model = cfg.get("MODEL");
+        // 优先从环境变量读取 DeepSeek 配置，如果没有则从数据库读取
+        String baseUrl = System.getenv("DEEPSEEK_BASE_URL");
+        String apiKey = System.getenv("DEEPSEEK_API_KEY");
+        String model = System.getenv("DEEPSEEK_MODEL");
+
+        // 如果环境变量不存在，则回退到数据库配置
+        if (baseUrl == null || apiKey == null) {
+            var cfg = configService.getAiConfigs();
+            baseUrl = baseUrl != null ? baseUrl : cfg.get("BASE_URL");
+            apiKey = apiKey != null ? apiKey : cfg.get("API_KEY");
+            model = model != null ? model : cfg.get("MODEL");
+        }
+
+        // 如果仍然没有配置，使用默认值
+        if (baseUrl == null) baseUrl = "https://api.deepseek.com";
+        if (model == null) model = "deepseek-chat";
+
+        // 校验必需参数
+        if (apiKey == null || apiKey.trim().isEmpty()) {
+            throw new RuntimeException("AI API Key 未配置，请设置 DEEPSEEK_API_KEY 环境变量或数据库配置");
+        }
+
+        log.info("使用AI配置 - BaseURL: {}, Model: {}, Key: {}...",
+                baseUrl, model, maskApiKey(apiKey));
+
         // 根据模型类型选择兼容的端点（部分“推理/Reasoning”模型需要使用 Responses API）
         String endpoint = isResponsesModel(model)
                 ? buildResponsesEndpoint(baseUrl)
@@ -330,5 +362,54 @@ public class AiService {
         aiMapper.insert(aiEntity);
         log.info("创建默认AI配置，ID: {}", aiEntity.getId());
         return aiEntity;
+    }
+
+    /**
+     * 测试DeepSeek连接
+     * @return 测试结果
+     */
+    public String testDeepSeekConnection() {
+        try {
+            String testMessage = "你好，请简单回复一个字：是";
+            String response = sendRequest(testMessage);
+            return "DeepSeek连接成功，响应: " + response;
+        } catch (Exception e) {
+            log.error("DeepSeek连接测试失败", e);
+            return "DeepSeek连接失败: " + e.getMessage();
+        }
+    }
+
+    /**
+     * 获取当前使用的AI配置信息（用于调试）
+     * @return 配置信息字符串
+     */
+    public String getCurrentAiConfig() {
+        StringBuilder config = new StringBuilder();
+        config.append("AI配置信息:\n");
+
+        // 环境变量配置
+        String envBaseUrl = System.getenv("DEEPSEEK_BASE_URL");
+        String envApiKey = System.getenv("DEEPSEEK_API_KEY");
+        String envModel = System.getenv("DEEPSEEK_MODEL");
+
+        if (envBaseUrl != null || envApiKey != null) {
+            config.append("- 环境变量配置:\n");
+            config.append("  DEEPSEEK_BASE_URL: ").append(envBaseUrl != null ? envBaseUrl : "未设置").append("\n");
+            config.append("  DEEPSEEK_API_KEY: ").append(envApiKey != null ? maskApiKey(envApiKey) : "未设置").append("\n");
+            config.append("  DEEPSEEK_MODEL: ").append(envModel != null ? envModel : "未设置").append("\n");
+        }
+
+        // 数据库配置（回退选项）
+        try {
+            var cfg = configService.getAiConfigs();
+            config.append("- 数据库配置:\n");
+            config.append("  BASE_URL: ").append(cfg.get("BASE_URL")).append("\n");
+            config.append("  API_KEY: ").append(maskApiKey(cfg.get("API_KEY"))).append("\n");
+            config.append("  MODEL: ").append(cfg.get("MODEL")).append("\n");
+        } catch (Exception e) {
+            config.append("- 数据库配置: 读取失败\n");
+        }
+
+        return config.toString();
     }
 }
